@@ -16,58 +16,28 @@ const RegisterForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aquí enviaríamos los datos del formulario al backend para crear el usuario
-    // Puedes usar fetch() o Axios para realizar la solicitud POST al servidor.
+    try {
+      const response = await fetch("http://localhost:5000/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data.message); // Imprime el mensaje de confirmación del backend
+        // Puedes redirigir al usuario a otra página o mostrar una notificación de éxito.
+      } else {
+        console.error("Error al registrar el usuario");
+      }
+    } catch (error) {
+      console.error("Error en la solicitud:", error);
+    }
   };
 
-  return (
-    <div className="container mt-5">
-      <div className="row justify-content-center">
-        <div className="col-md-6">
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="username">Nombre de usuario</label>
-              <input
-                type="text"
-                name="username"
-                className="form-control"
-                placeholder="Nombre de usuario"
-                value={formData.username}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="email">Correo electrónico</label>
-              <input
-                type="email"
-                name="email"
-                className="form-control"
-                placeholder="Correo electrónico"
-                value={formData.email}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="password">Contraseña</label>
-              <input
-                type="password"
-                name="password"
-                className="form-control"
-                placeholder="Contraseña"
-                value={formData.password}
-                onChange={handleChange}
-              />
-            </div>
-            <button type="submit" className="btn btn-primary">
-              Registrarse
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
+  // Resto del código del componente
 };
-
-export default RegisterForm;
